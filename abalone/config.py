@@ -1,0 +1,3 @@
+GRID_RADIUS = 5
+
+GROUP_LENGTHS = range(1, 4)
