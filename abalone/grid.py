@@ -124,7 +124,7 @@ class HexQuerySet(dict):
         populations = self.populations(states.pop())
         return len(list(populations)) == 1
 
-    def blocks(self, hex, lengths=None):
+    def hex_blocks(self, hex, lengths=None):
         """
         Returns all the possible blocks in which this hex could be moved.
         """
@@ -135,10 +135,18 @@ class HexQuerySet(dict):
         population = self.population(hex)
         neighbours = population.neighbours(hex)
         directions = (hex.direction(n) for n in neighbours)
+        directions = itertools.chain(directions, [(0, 0, 0)])
         for direction, distance in itertools.product(directions, lengths):
             block = population.by_vector(hex, direction, distance)
             block = tuple(sorted(block.keys()))
             blocks.add(block)
+        return blocks
+
+    def blocks(self, state, lengths=None):
+        blocks = set()
+        for hex in self.by_state(state):
+            hex_blocks = self.hex_blocks(hex, lengths)
+            blocks.update(hex_blocks)
         return blocks
 
 
