@@ -175,15 +175,6 @@ class BaseGrid(dict):
         stop = min(r-v, r)
         return range(start+1, stop)
 
-    def groups(self, state, lengths=None):
-        if lengths is None:
-            lengths = config.GROUP_LENGTHS
-        groups = set()
-        for axis, row in itertools.product(('x', 'y', 'z'), self.axis_range()):
-            conseq = self.query.by_state(state).by_axis(**{axis: row}).keys()
-            groups.update(conseq)
-        return groups
-
     def __repr__(self):
         board = ((self.REPR[self[(x, z)]] for x in self.axis_range(z))
                  for z in self.axis_range())
