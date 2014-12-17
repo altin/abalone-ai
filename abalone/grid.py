@@ -9,6 +9,15 @@ HexBase = namedtuple('HexBase', ('x', 'z'))
 
 
 class Hex(HexBase):
+    def __new__(cls, x=None, y=None, z=None):
+        if x is None:
+            x = y-z
+        elif y is None:
+            y = -x-z
+        elif z is None:
+            z = -x-y
+        return super(cls, Hex).__new__(cls, x, z)
+
     @property
     def y(self):
         return -self.x - self.z
@@ -16,8 +25,18 @@ class Hex(HexBase):
     def __repr__(self):
         return 'Hex(x={self.x}, y={self.y}, z={self.z})'.format(self=self)
 
-    def neighbours(self):
+    def __iter__(self):
+        yield self.x
+        yield self.y
+        yield self.z
+
+    @property
+    def directions(self):
         for x, z in itertools.permutations((-1, 0, 1), 2):
+            yield x, -x-z, z
+
+    def neighbours(self):
+        for x, y, z in self.directions:
             yield Hex(self.x + x, self.z + z)
 
     def distance(self, hex):
@@ -28,17 +47,16 @@ class Hex(HexBase):
     def is_adjacent(self, hex):
         return self.distance(hex) == 1
 
-
-class HexGroup(tuple):
-    def is_valid(self):
-        return len(self) in config.GROUP_LENGTHS
+    def direction(self, hex):
+        return (hex.x - self.x, hex.y - self.y, hex.z - self.z)
 
 
 def queryset(func):
     @wraps(func)
-    def wrapper(*args, **kwargs):
-        result = func(*args, **kwargs)
-        return HexQuerySet(result)
+    def wrapper(self, *args, **kwargs):
+        results = func(self, *args, **kwargs)
+        results = ((hex, self[hex]) for hex in results)
+        return HexQuerySet(results)
     return wrapper
 
 
@@ -50,16 +68,16 @@ class HexQuerySet(dict):
     @queryset
     def neighbours(self, hex):
         hex = Hex(*hex)
-        return ((neighbour, self[neighbour]) for neighbour in hex.neighbours()
+        return (neighbour for neighbour in hex.neighbours()
                 if neighbour in self)
 
     @queryset
     def by_state(self, state):
-        return ((hex, s) for (hex, s) in self.iteritems() if s == state)
+        return (hex for (hex, s) in self.iteritems() if s == state)
 
     @queryset
     def not_empty(self):
-        return ((hex, s) for (hex, s) in self.iteritems() if s is not None)
+        return (hex for (hex, s) in self.iteritems() if s is not None)
 
     @queryset
     def by_axis(self, x=None, y=None, z=None):
@@ -67,7 +85,14 @@ class HexQuerySet(dict):
             if all((x is None or hex.x == x,
                     y is None or hex.y == y,
                     z is None or hex.z == z)):
-                yield hex, state
+                yield hex
+
+    @queryset
+    def by_vector(self, hex, direction, distance):
+        moves = ((axis*step for axis in direction) for step in range(distance))
+        places = ((b+c for b, c in zip(hex, move)) for move in moves)
+        places = {Hex(*list(place)) for place in places}
+        return set(self.keys()) & places
 
     def populations(self, state):
         """
@@ -84,6 +109,10 @@ class HexQuerySet(dict):
                 neighbours.update(set(hex.neighbours()) & unchecked)
             yield group
 
+    @queryset
+    def population(self, hex):
+        return next((pop for pop in self.populations(self[hex]) if hex in pop))
+
     def are_connected(self):
         """
         Returns wether the current QS hexes are all connected or not.
@@ -95,37 +124,21 @@ class HexQuerySet(dict):
         populations = self.populations(states.pop())
         return len(list(populations)) == 1
 
-    def axial_supporters(self, hex):
-        """
-        Returns three sets (one per axis) with the hexes that support (are
-        directly conected and not too far away) this hex.
-        """
-        for axis in 'x', 'y', 'z':
-            fix = getattr(hex, axis)
-            in_line = self.by_axis(**{axis: fix})
-            in_line_pops = in_line.populations(self[hex])
-            # Only one inline-population should fulfill this
-            supporters = next((pop for pop in in_line_pops if hex in pop))
-            # +1 because we want to exclude the ones that are
-            # max(GROUP_LENGTHS) away and include the hex itself
-            supporters = set((sup for sup in supporters
-                              if hex.distance(sup)+1 in config.GROUP_LENGTHS))
-            yield supporters
-
     def blocks(self, hex, lengths=None):
         """
-        Returns a set of all the possible blocks in which this hex could be
-        moved.
+        Returns all the possible blocks in which this hex could be moved.
         """
         if lengths is None:
             lengths = config.GROUP_LENGTHS
+
         blocks = set()
-        for supporters in self.axial_supporters(hex):
-            for length in lengths:
-                for comb in itertools.combinations(supporters, length):
-                    state = ((h, self[hex]) for h in comb)
-                    if hex in comb and HexQuerySet(state).are_connected():
-                        blocks.add(comb)
+        population = self.population(hex)
+        neighbours = population.neighbours(hex)
+        directions = (hex.direction(n) for n in neighbours)
+        for direction, distance in itertools.product(directions, lengths):
+            block = population.by_vector(hex, direction, distance)
+            block = tuple(sorted(block.keys()))
+            blocks.add(block)
         return blocks
 
 
