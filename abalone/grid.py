@@ -140,11 +140,8 @@ class HexQuerySet(dict):
         return blocks
 
     def blocks(self, state, lengths=None):
-        blocks = set()
-        for hex in self.by_state(state):
-            hex_blocks = self.hex_blocks(hex, lengths)
-            blocks.update(hex_blocks)
-        return blocks
+        return {block for hex in self.by_state(state)
+                for block in self.hex_blocks(hex, lengths)}
 
     def block_moves(self, block):
         pass
