@@ -9,6 +9,9 @@ HexBase = namedtuple('HexBase', ('x', 'z'))
 
 
 class Hex(HexBase):
+    directions = [(x, -x-z, z) for x, z in
+                  itertools.permutations((-1, 0, 1), 2)]
+
     def __new__(cls, x=None, y=None, z=None):
         if x is None:
             x = y-z
@@ -29,11 +32,6 @@ class Hex(HexBase):
         yield self.x
         yield self.y
         yield self.z
-
-    @property
-    def directions(self):
-        for x, z in itertools.permutations((-1, 0, 1), 2):
-            yield x, -x-z, z
 
     def neighbours(self):
         for x, y, z in self.directions:
