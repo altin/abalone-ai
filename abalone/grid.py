@@ -9,7 +9,7 @@ HexBase = namedtuple('HexBase', ('x', 'z'))
 
 
 class Hex(HexBase):
-    directions = [(x, -x-z, z) for x, z in
+    directions = [(_x, -_x-_z, _z) for _x, _z in  # Collide with attrs
                   itertools.permutations((-1, 0, 1), 2)]
 
     def __new__(cls, x=None, y=None, z=None):
@@ -35,7 +35,7 @@ class Hex(HexBase):
 
     def neighbours(self):
         for x, y, z in self.directions:
-            yield Hex(self.x + x, self.z + z)
+            yield Hex(x=self.x + x, z=self.z + z)
 
     def distance(self, hex):
         return (abs(self.x - hex.x) +
@@ -65,7 +65,6 @@ class HexQuerySet(dict):
 
     @queryset
     def neighbours(self, hex):
-        hex = Hex(*hex)
         return (neighbour for neighbour in hex.neighbours()
                 if neighbour in self)
 
@@ -157,7 +156,7 @@ class BaseGrid(dict):
         self.radius = r
         for x in self.axis_range():
             for z in self.axis_range(x):
-                self[Hex(x, z)] = None
+                self[Hex(x=x, z=z)] = None
 
     @property
     def query(self):
