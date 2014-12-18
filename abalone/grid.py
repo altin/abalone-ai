@@ -140,7 +140,23 @@ class HexQuerySet(dict):
         return blocks
 
     def blocks(self, state, lengths=None):
-        return {self.hex_blocks(hex, lengths) for hex in self.by_state(state)}
+        blocks = set()
+        for hex in self.by_state(state):
+            hex_blocks = self.hex_blocks(hex, lengths)
+            blocks.update(hex_blocks)
+        return blocks
+
+    def block_moves(self, block):
+        pass
+        # for direction in directions
+            # get the hexes where the block would be moved
+            # if there's nothing in those exes: ok
+            # if there's some hex of the same colour: not ok
+            # else:
+                # get the "strength" of the block in that direction
+                # get the hexes in that direction to the distance of "strength"
+                # a hole must be in the last position of the hexes
+                # no own marbles must in anywhere in the hexes
 
 
 class BaseGrid(dict):
