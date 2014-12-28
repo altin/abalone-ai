@@ -12,7 +12,7 @@ class IllegalMove(Exception):
     pass
 
 
-HexBase = namedtuple('HexBase', ('x', 'z'))
+HexBase = namedtuple('Hex', ('x', 'z'))
 
 
 class Hex(HexBase):
@@ -54,8 +54,8 @@ class Hex(HexBase):
 
 
 class HexBlock(tuple):
-    def __init__(self, *args):
-        super(HexBlock, self).__init__(args)
+    def __new__(cls, *args):
+        return super(HexBlock, cls).__new__(cls, *args)
 
     def is_valid(self):
         return all((
@@ -107,15 +107,15 @@ class HexQuerySet(dict):
 
     @queryset
     def by_state(self, state):
-        return (hex for (hex, s) in self.iteritems() if s == state)
+        return (hex for (hex, s) in self.items() if s == state)
 
     @queryset
     def not_empty(self):
-        return (hex for (hex, s) in self.iteritems() if s is not None)
+        return (hex for (hex, s) in self.items() if s is not None)
 
     @queryset
     def by_axis(self, x=None, z=None):
-        for hex, state in self.iteritems():
+        for hex, state in self.items():
             if all((x is None or hex.x == x, z is None or hex.z == z)):
                 yield hex
 
@@ -238,7 +238,7 @@ class BaseGrid(dict):
 
     @property
     def query(self):
-        return HexQuerySet(self.iteritems())
+        return HexQuerySet(self.items())
 
     def axis_range(self, v=0):
         r = self.radius
