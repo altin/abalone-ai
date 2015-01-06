@@ -9,12 +9,19 @@ Example use case
     from abalone.config import INITIAL_POSITIONS
 
     # Initialize the grid with the 'standard' opening
-    grid = AbaloneGrid(INITIAL_POSITIONS['standard'])
+    initial_position = INITIAL_POSITIONS['standard']
+    grid = AbaloneGrid(initial_position)
     print(grid)
 
     # Get all the possible moves for the black player
-    moves = grid.moves(grid.BLACK)
-    print(list(moves))
+    moves = list(grid.moves(grid.BLACK))
+    print(moves)
+
+    # Make one of the possible moves
+    block, direction = moves[0]
+    grid.move(block, direction)
+
+    print(grid)
 
 
 Documentation
