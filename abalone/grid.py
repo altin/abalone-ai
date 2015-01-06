@@ -351,3 +351,12 @@ class BaseGrid(dict):
                     pass
                 else:
                     yield block, direction
+
+
+class AbaloneGrid(BaseGrid):
+    def __init__(self, initial_position):
+        super(AbaloneGrid, self).__init__(config.GRID_RADIUS)
+        positions = {position: state
+                     for state, positions in initial_position.items()
+                     for position in positions}
+        self.update(positions)
