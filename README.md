@@ -2,6 +2,21 @@ A prototype written in Python of the two player strategic board game
 [Abalone](https://en.wikipedia.org/wiki/Abalone_(board_game)).
 
 
+Example use case
+================
+
+    from abalone.grid import AbaloneGrid
+    from abalone.config import INITIAL_POSITIONS
+
+    # Initialize the grid with the 'standard' opening
+    grid = AbaloneGrid(INITIAL_POSITIONS['standard'])
+    print(grid)
+
+    # Get all the possible moves for the black player
+    moves = grid.moves(grid.BLACK)
+    print(list(moves))
+
+
 Documentation
 =============
 
