@@ -260,6 +260,9 @@ class HexQuerySet(dict):
         if not block.is_valid():
             raise IllegalMove("Incorrect block.")
 
+        # Reorder the block
+        block = block.sorted(direction)
+
         state = self[block[0]]
 
         # Get the pushing strength
@@ -346,7 +349,7 @@ class BaseGrid(dict):
         for block in blocks:
             for direction in Hex.directions:
                 try:
-                    self.query.move(block.sorted(direction), direction)
+                    self.query.move(block, direction)
                 except IllegalMove:
                     pass
                 else:
