@@ -240,7 +240,7 @@ class HexQuerySet(dict):
         """
         Returns all the possible blocks which could be legally moved.
         """
-        return {block for hex in self.by_state(state)
+        return {HexBlock(block) for hex in self.by_state(state)
                 for block in self.hex_blocks(hex, lengths)}
 
     @queryset
