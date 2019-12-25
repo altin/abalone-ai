@@ -1,23 +1,8 @@
-GRID_RADIUS = 5
+import json
 
-GROUP_LENGTHS = range(1, 4)
-GAME_OVER = 8
 BLACK = False
 WHITE = True
-
-def initialize(board):
-    global GAME_OVER
-    if board == 'standard':
-        GAME_OVER = 8
-    elif board == 'mini':
-        GAME_OVER = 2
-    else:
-        GAME_OVER = 2
-        return board
-    return INITIAL_POSITIONS[board]
-
-INITIAL_POSITIONS = {
-    'mini': {
+state1 = {
         WHITE: [
                          (1, -4), (2, -4), (3, -4),
                               (1, -3), (2, -3),
@@ -27,9 +12,11 @@ INITIAL_POSITIONS = {
                                  (-1, 2),
                               (-2, 3), (-1, 3),
                          (-3, 4), (-2, 4), (-1, 4),
-        ],
-    },
-    'standard': {
+        ]
+    }
+
+
+state2 = {        
         WHITE: [
                 (0, -4), (1, -4), (2, -4), (3, -4), (4, -4),
             (-1, -3), (0, -3), (1, -3), (2, -3), (3, -3), (4, -3),
@@ -39,6 +26,29 @@ INITIAL_POSITIONS = {
                         (-2, 2), (-1, 2), (0, 2),
             (-4, 3), (-3, 3), (-2, 3), (-1, 3), (0, 3), (1, 3),
                 (-4, 4), (-3, 4), (-2, 4), (-1, 4), (0, 4),
-        ],
+        ]
     }
-}
+
+state3 = {        
+        WHITE: [
+                (0, -4), (1, -4),          (3, -4), (4, -4),
+            (-1, -3), (0, -3), (0, -1), (1, -1), (3, -3), (4, -3),
+                        (-1, 0), (0, 0), (1, 0),
+        ],
+        BLACK: [
+                        (-1, 1), (-1, 2), (0, 1),
+            (-4, 1), (-4, 2), (-4, 3), (3, 1), (2, 2), (1, 3),
+                (-4, 4), (-3, 4), (-2, 4), (-1, 4), (0, 4),
+        ]
+    }
+
+
+with open('1.json', 'w') as fp:
+    json.dump(state1, fp)
+
+with open('2.json', 'w') as fp:
+    json.dump(state2, fp)
+
+with open('3.json', 'w') as fp:
+    json.dump(state3, fp)
+

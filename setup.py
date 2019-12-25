@@ -1,22 +1,23 @@
 from setuptools import setup, find_packages
 
 
-description = ('A Python implementation of the two player strategic board game '
-               'Abalone.')
+description = ('An intelligent game engine for the strategic board game Abalone.')
 
 with open('README.md') as readme:
     long_description = readme.read()
 
-
 setup(
     name='abalone',
-    version='0.1',
+    version='0.2',
     description=description,
     long_description=long_description,
     author='Unai Zalakain',
     author_email='unai@gisa-elkartea.com',
     url='http://github.com/unaizalakain/abalone/',
     packages=find_packages(exclude=('tests*',)),
+    install_requires=[
+        'pyfiglet'
+    ],
     package_data = {},
     license='GPLv3',
     classifiers=[
@@ -34,6 +35,10 @@ setup(
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8'
     ],
     include_package_data=True,
     zip_safe=False,
