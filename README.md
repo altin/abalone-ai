@@ -72,16 +72,16 @@ The evaluation function, then, is the sum of the scores given by all the heurist
 
 >*I discovered through trial and error that h<sub>2</sub> should be used when the marbles are far from the center: |h<sub>1</sub>| > 2 and h<sub>3</sub> should be used when the marbles are near the center: |h<sub>1</sub>| < 1.8 , and when h<sub>3</sub> is used, h<sub>3</sub> is scaled by a factor of 100 so that attacking moves are favoured.*
 
-### Move ordering
-Move ordering is extremely important so that better paths are searched first.
+### Optimizations
+Move ordering and transposition tables are extremely important so that better paths are searched first.
 
 #### Three in a row 
 The amount of ways to have three blocks in a row is also ideal. This heuristic will be used for move ordering. 
 
-####  Push moves 
+#### Push moves 
 States that lead to potentially more pushes will shorten the amount of moves it takes to win the game. So this heuristic is good for move ordering.
 
-#### Transposition table optimization
+#### Transposition table
 The transposition table I used is a hash map which stores a hashed version of the state as its keys. Since the transposition table will do many lookups, it will have to check if a state is already in the table. In order to compare states, a hashing function is needed. I used [Zobrist hashing](https://en.wikipedia.org/wiki/Zobrist_hashing), a common hashing function for board games like Chess. It serializes the state into a unique 64bit signed integer. 
 
 ## Results
