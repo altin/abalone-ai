@@ -103,7 +103,7 @@ Open `dump.py` and fill out the game state template and run the program using th
 
 ## Running the game agent
 1. Install dependencies: `python setup.py develop`
-2. Run `start.py` and follow the command-line interface to either load a JSON state (see Generating a state file) or simulate a game between two AI computers in a game of Abalone
+2. Run: `start.py` and follow the command-line interface to either load a JSON state (see Generating a state file) or simulate a game between two AI computers in a game of Abalone
 
 # Screenshot
 ![image](https://github.com/altin/abalone-engine/blob/master/example.PNG)
