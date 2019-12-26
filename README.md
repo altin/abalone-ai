@@ -82,7 +82,7 @@ The amount of ways to have three blocks in a row is also ideal. This heuristic w
 States that lead to potentially more pushes will shorten the amount of moves it takes to win the game. So this heuristic is good for move ordering.
 
 #### Transposition table optimization
-The transposition table I used is a hash map which stores a hashed version of the state as its keys. Since the transposition table will do many lookups, it will have to check if a state is already in the table. In order to compare states, a hashing function is needed. I used [Zobrist hashing] (https://en.wikipedia.org/wiki/Zobrist_hashing), a common hashing function for board games like Chess. It serializes the state into a unique 64bit signed integer. 
+The transposition table I used is a hash map which stores a hashed version of the state as its keys. Since the transposition table will do many lookups, it will have to check if a state is already in the table. In order to compare states, a hashing function is needed. I used [Zobrist hashing](https://en.wikipedia.org/wiki/Zobrist_hashing), a common hashing function for board games like Chess. It serializes the state into a unique 64bit signed integer. 
 
 ## Results
 Overall, the Principle Variation Search with the Transposition Table Optimization performed best, while Minimax performed worst. Monte-Carlo Tree Search was not testable on my machine.
