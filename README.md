@@ -95,7 +95,7 @@ Python 3.8*
 Open `dump.py` and fill out the game state template and run the program using the Python interpreter. The program will output a JSON file which can be loaded in the main program and used to either generate the next best move, or simulate a game starting from that state.
 
 ## Configuring the game agent
-1. Open `config.py` and set the initial starting board by filling in values of your choosing (default is `mini` for a miniaturized version of the game for demo purposes)
+1. Open `abalone/config.py` and set the initial starting board by filling in values of your choosing (default is `mini` for a miniaturized version of the game for demo purposes)
 2. The grid size can be changed using `GRID_RADIUS`
 3. The number of marbles required to win can be changed using `GAME_OVER`
 4. The maximum number of attacking marbles in a row can be changed using `GROUP_LENGTHS` (default is `3`)
@@ -104,3 +104,7 @@ Open `dump.py` and fill out the game state template and run the program using th
 ## Running the game agent
 1. Install dependencies: `python setup.py develop`
 2. Run `start.py` and follow the command-line interface to either load a JSON state (see Generating a state file) or simulate a game between two AI computers in a game of Abalone
+
+# Screenshot
+![image](https://github.com/altin/abalone-engine/blob/master/example.PNG)
+![image](https://github.com/altin/abalone-engine/blob/master/example2.PNG)
