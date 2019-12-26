@@ -3,6 +3,8 @@
 *egg-info
 dist
 build
+/*.json
+/*.txt
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
